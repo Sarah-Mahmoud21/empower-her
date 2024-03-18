@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.container .register {
+  text-align: center;
+}/*# sourceMappingURL=registerForm.css.map */
