@@ -1,0 +1,58 @@
+@import "../variables";
+.main{
+    padding: 10px;
+    border:none;
+    h2{
+        color:$peach;
+    }
+    .overview{
+        position: relative;
+        display: block;
+        h1{
+            color:$peach;
+        }
+    }
+    .form-group{
+        display: block;
+        input{
+            width:80%;
+            height:20px;
+            border-radius: 15px;
+            color:$blue;
+        }
+        select{
+            width:80%;
+            height:30px;
+            border-radius: 15px;
+        }
+        textarea{
+            width:80%;
+            height:100px;
+        }
+        label{
+            color: $blue;
+            font-family :$cursive;
+            font-weight: 200;
+
+        }
+        .checkboxes{
+            float:left;
+        }
+        input[type=file]{
+           padding-left:5px;
+           height:25px;
+        }
+
+    }
+    
+    button[type = submit]{
+        border-radius:15px;
+        width:10%;
+        height:30px;
+        margin-top:10px;
+        background-color: $peach;
+        color:$pink;
+
+
+    }
+}

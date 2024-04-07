@@ -1,0 +1,43 @@
+@import "../variables";
+@mixin links {
+    font-family: $cursive;
+    font-weight: 1000;
+    margin-right: 10px;
+    text-decoration: none;
+    color: $peach;
+  }
+  @mixin buttons {
+    border: none;
+    background: none;
+  }
+
+.footer {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    background-color: $pink;
+  
+    ul {
+      list-style-type: none;
+      li {
+        color: $peach;
+        a {
+          @include links();
+        }
+        button {
+          @include buttons();
+          color: $peach;
+          font-size: large;
+          margin: 5px;
+          &:hover {
+            border: 2px solid white;
+            border-radius: 50%;
+          }
+        }
+      }
+      .head-title {
+        font-size: larger;
+        font-weight: bold;
+      }
+    }
+  }

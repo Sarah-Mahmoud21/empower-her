@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 95%;
+  height: 500px;
+  background-color: #FEFBF3;
+}
+.container .header {
+  text-align: center;
+  color: #D37676;
+  font-size: 30px;
+}
+.container .close {
+  position: absolute;
+  background: none;
+  border: none;
+  color: #D37676;
+  right: 1%;
+  top: 1%;
+  font-size: 30px;
+}
+.container button[type=submit] {
+  margin-top: 5px;
+  width: 178px;
+  color: #FEFBF3;
+  font-size: 15px;
+  background-color: #D37676;
+}
+.container input[type=date] {
+  width: 173px;
+}
+
+@media only screen and (min-width: 1023px) {
+  .container {
+    top: 8%;
+  }
+}/*# sourceMappingURL=loginForm.css.map */

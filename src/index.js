@@ -1,20 +1,43 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import LoginForm from "./pages/LoginForm";
-import RegisterForm from "./pages/RegisterForm";
+import Membership from "./pages/Membership/Membership";
+import Support from "./pages/Support";
 import{createBrowserRouter,RouterProvider} from "react-router-dom";
+import Home from './pages/Home/Home';
+import Opportunities from './pages/Opportunities';
+import LoginForm from './pages/Login/LoginForm';
+import Register from "./pages/Register/RegisterForm";
+import ProfilePage from './pages/ProfilePage/ProfilePage';
+
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LoginForm/>
+    element: <Home/>
   },
   {
-    path: '/register',
-    element: <RegisterForm/>
+    path: '/membership',
+    element: <Membership/>
+  },
+  {
+    path: '/Support',
+    element: <Support/>
+  },
+  {
+    path: '/Opportunities',
+    element: <Opportunities/>
+  },
+  {
+    path:'/login',
+    element:<LoginForm/>
+  },
+  {
+    path:'/register',
+    element:<Register/>
+  },
+  {
+    path: '/profile',
+    element: <ProfilePage/>
   }
 ]);
 

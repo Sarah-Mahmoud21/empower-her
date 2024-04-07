@@ -1,0 +1,14 @@
+// _breakpoints.scss
+
+$breakpoints: (
+  medium: 768px,
+  large: 1023px
+);
+
+@mixin breakpoint($breakpoint) {
+  $width: map-get($breakpoints, $breakpoint);
+
+  @media only screen and (min-width: $width) {
+    @content;
+  }
+}

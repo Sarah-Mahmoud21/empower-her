@@ -1,0 +1,28 @@
+.photo-slider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.photo-slider img {
+  margin: 5px;
+  border-radius: 50%;
+  width: 100%;
+}
+.photo-slider .prev-btn {
+  color: #d37676;
+  font-size: 40px;
+  border: none;
+  background: none;
+}
+.photo-slider .next-btn {
+  color: #d37676;
+  font-size: 40px;
+  border: none;
+  background: none;
+}
+
+@media only screen and (min-width: 1023px) {
+  .photo-slider {
+    margin-left: 40%;
+  }
+}/*# sourceMappingURL=PhotoSlider.css.map */

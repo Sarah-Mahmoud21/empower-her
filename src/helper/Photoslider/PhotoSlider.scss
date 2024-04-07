@@ -1,0 +1,33 @@
+@import 'breakpoint';
+@mixin button-style{
+    color:#d37676;
+    font-size: 40px;
+    border:none;
+    background:none;       
+}
+
+
+.photo-slider{
+ display: flex;
+ align-items: center;
+ justify-content: center;
+    img{  
+        margin:5px; 
+        border-radius: 50%;
+        width:100%;
+        
+    }
+    .prev-btn  {
+       @include button-style();
+    }
+    .next-btn{
+        @include button-style();
+    }
+}
+
+@include breakpoint(large) {
+    .photo-slider{
+        margin-left: 40%;
+    }
+}
+    

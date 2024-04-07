@@ -1,0 +1,172 @@
+@import "../variables";
+@import "../breakpoint";
+@mixin buttons {
+  border: none;
+  background: none;
+}
+@mixin justify {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@mixin links {
+  font-family: $cursive;
+  font-weight: 1000;
+  margin-right: 10px;
+  text-decoration: none;
+  color: $peach;
+}
+
+body {
+  background-color: $beige;
+  margin: 0;
+}
+
+.header {
+  nav {
+    background-color: $pink;
+    @include justify();
+    .nav-bar {
+      @include buttons();
+      color: $peach;
+      position: absolute;
+      left: 0px;
+      font-size: large;
+    }
+    h2 {
+      font-style: italic;
+      font-family: "cursive";
+      color: $peach;
+      margin: 5px;
+      position: absolute;
+      text-align: center;
+    }
+    .reference {
+      @include justify();
+      list-style-type: none;
+
+      li {
+        display: none;
+        a {
+          @include links();
+        }
+      }
+    }
+    .icons {
+      @include justify();
+      list-style-type: none;
+      position: absolute;
+      right: 0px;
+      margin: 5px;
+      li{
+      button {
+        color: $peach;
+        font-size: 20px;
+        @include buttons();
+        margin-right:5px;
+        
+      }
+      a{
+        color: $peach;
+        margin-right:5px;
+        font-size: 20px;
+      }
+    }
+  }
+  }
+}
+
+.side-bar {
+  margin: 0%;
+  position: absolute;
+  top: 0;
+  list-style-type: none;
+  background-color: $beige;
+  width: 30%;
+  z-index: 2;
+  height: 100vh;
+  display: none;
+  li {
+    margin-bottom: 5px;
+    a {
+      text-decoration: none;
+      color: $peach;
+    }
+    .close {
+      @include buttons();
+      font-size: 20px;
+      right: 0;
+      position: absolute;
+      display: inline-block;
+      color: $peach;
+    }
+  }
+}
+.content {
+  width: 80%;
+  margin: auto;
+  .photos {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    h1 {
+      display: none;
+    }
+  }
+
+  h3 {
+    text-align: center;
+    font-family: $cursive;
+    font-style: italic;
+    color: $peach;
+  }
+  p {
+    strong {
+      color: $peach;
+      font-family: $cursive;
+      font-style: italic;
+    }
+    color: $blue;
+  }
+}
+
+@include breakpoint(medium) {
+  .content {
+    .photos {
+      h1 {
+        display: flex;
+        color: $peach;
+      }
+    }
+  }
+}
+@include breakpoint(large) {
+  .header {
+    nav {
+      h2 {
+        left: 0px;
+      }
+      .nav-bar {
+        display: none;
+      }
+
+      .reference {
+        li {
+          display: flex;
+        }
+      }
+    }
+  }
+  .side-bar {
+    display: none;
+    visibility: hidden;
+  }
+  .content {
+    .photos {
+      h1 {
+        display: flex;
+      }
+    }
+  }
+}

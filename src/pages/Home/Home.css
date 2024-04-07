@@ -1,0 +1,145 @@
+body {
+  background-color: #FEFBF3;
+  margin: 0;
+}
+
+.header nav {
+  background-color: #FBF3D5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.header nav .nav-bar {
+  border: none;
+  background: none;
+  color: #D37676;
+  position: absolute;
+  left: 0px;
+  font-size: large;
+}
+.header nav h2 {
+  font-style: italic;
+  font-family: "cursive";
+  color: #D37676;
+  margin: 5px;
+  position: absolute;
+  text-align: center;
+}
+.header nav .reference {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style-type: none;
+}
+.header nav .reference li {
+  display: none;
+}
+.header nav .reference li a {
+  font-family: "cursive";
+  font-weight: 1000;
+  margin-right: 10px;
+  text-decoration: none;
+  color: #D37676;
+}
+.header nav .icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style-type: none;
+  position: absolute;
+  right: 0px;
+  margin: 5px;
+}
+.header nav .icons li button {
+  color: #D37676;
+  font-size: 20px;
+  border: none;
+  background: none;
+  margin-right: 5px;
+}
+.header nav .icons li a {
+  color: #D37676;
+  margin-right: 5px;
+  font-size: 20px;
+}
+
+.side-bar {
+  margin: 0%;
+  position: absolute;
+  top: 0;
+  list-style-type: none;
+  background-color: #FEFBF3;
+  width: 30%;
+  z-index: 2;
+  height: 100vh;
+  display: none;
+}
+.side-bar li {
+  margin-bottom: 5px;
+}
+.side-bar li a {
+  text-decoration: none;
+  color: #D37676;
+}
+.side-bar li .close {
+  border: none;
+  background: none;
+  font-size: 20px;
+  right: 0;
+  position: absolute;
+  display: inline-block;
+  color: #D37676;
+}
+
+.content {
+  width: 80%;
+  margin: auto;
+}
+.content .photos {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.content .photos h1 {
+  display: none;
+}
+.content h3 {
+  text-align: center;
+  font-family: "cursive";
+  font-style: italic;
+  color: #D37676;
+}
+.content p {
+  color: #265073;
+}
+.content p strong {
+  color: #D37676;
+  font-family: "cursive";
+  font-style: italic;
+}
+
+@media only screen and (min-width: 768px) {
+  .content .photos h1 {
+    display: flex;
+    color: #D37676;
+  }
+}
+@media only screen and (min-width: 1023px) {
+  .header nav h2 {
+    left: 0px;
+  }
+  .header nav .nav-bar {
+    display: none;
+  }
+  .header nav .reference li {
+    display: flex;
+  }
+  .side-bar {
+    display: none;
+    visibility: hidden;
+  }
+  .content .photos h1 {
+    display: flex;
+  }
+}/*# sourceMappingURL=Home.css.map */

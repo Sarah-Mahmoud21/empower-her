@@ -1,0 +1,52 @@
+.main {
+  padding: 10px;
+  border: none;
+}
+.main h2 {
+  color: #D37676;
+}
+.main .overview {
+  position: relative;
+  display: block;
+}
+.main .overview h1 {
+  color: #D37676;
+}
+.main .form-group {
+  display: block;
+}
+.main .form-group input {
+  width: 80%;
+  height: 20px;
+  border-radius: 15px;
+  color: #265073;
+}
+.main .form-group select {
+  width: 80%;
+  height: 30px;
+  border-radius: 15px;
+}
+.main .form-group textarea {
+  width: 80%;
+  height: 100px;
+}
+.main .form-group label {
+  color: #265073;
+  font-family: "cursive";
+  font-weight: 200;
+}
+.main .form-group .checkboxes {
+  float: left;
+}
+.main .form-group input[type=file] {
+  padding-left: 5px;
+  height: 25px;
+}
+.main button[type=submit] {
+  border-radius: 15px;
+  width: 10%;
+  height: 30px;
+  margin-top: 10px;
+  background-color: #D37676;
+  color: #FBF3D5;
+}/*# sourceMappingURL=membership.css.map */
