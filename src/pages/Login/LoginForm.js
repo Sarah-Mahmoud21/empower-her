@@ -36,13 +36,13 @@ const LoginForm = () => {
       });
   
       if (!response.ok) {
-        throw new Error('Failed to login');
+        throw new Error('Failed to sign as member');
       }
   
       const data = await response.json();
       const token = data.token;
       localStorage.setItem('token', token);
-      setSuccessMessage("User logged in successfully"); // Update success message state
+      setSuccessMessage("member request sent successfully"); // Update success message state
       setError(""); // Clear any previous error messages
       setFormData({
         firstName: "",

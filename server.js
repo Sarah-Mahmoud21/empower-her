@@ -9,6 +9,7 @@ const app = express();
 const PORT = 4000;
 const { OAuth2Client } = require('google-auth-library'); // Import Google Auth Library
 const client = new OAuth2Client('55269184028-f6oopb7bk04spr4p7ns05at5arfadl6t.apps.googleusercontent.com'); // Replace with your Google Client ID
+const multer = require('multer'); 
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -45,6 +46,85 @@ const UserSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', UserSchema);
 module.exports = User;
+// mebership
+
+const MembershipSchema = new mongoose.Schema({
+  fullName: {
+    type: String,
+    required: true
+  },
+  address: {
+    type: String,
+    required: true
+  },
+  fullAddress: {
+    type: String,
+    required: true
+  },
+  mobileNumber: {
+    type: String,
+    required: true
+  },
+  emailAddress: {
+    type: String,
+    required: true
+  },
+  education: {
+    type: String,
+    required: true
+  },
+  age: {
+    type: Number,
+    required: true
+  },
+  socialMediaLink: {
+    type: String,
+    required: true
+  },
+  projectLocation: {
+    type: String,
+    required: true
+  },
+  projectSector: {
+    type: String,
+    required: true
+  },
+  projectSummary: {
+    type: String,
+    required: true
+  },
+  projectPictures: [String] 
+});
+
+const Membership = mongoose.model('Membership', MembershipSchema);
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const fullPath = path.join(__dirname, './uploads');
+const upload = multer({ dest: fullPath, storage });
+
+app.post('/membership', upload.array('projectPictures'), async (req, res) => {
+  try {
+    const membershipData = req.body;
+    const projectPictures = req.files.map(file => file.path)// Ensure that req.files is properly defined    console.log("Request body:", req.body);
+    console.log("Uploaded files:", req.files);
+    console.log("Project pictures:", projectPictures);
+
+    const newMembership = await Membership.create({ ...membershipData, projectPictures });
+    res.status(201).json({ success: true, message: 'Membership application submitted successfully' });
+  } catch (error) {
+    console.error('Error submitting membership application:', error);
+    res.status(500).json({ success: false, message: 'Failed to submit membership application' });
+  }
+});
+
+
 
 app.post('/register', async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
@@ -74,35 +154,6 @@ try {
   res.status(500).json({ success: false, message: 'Failed to register user' });
 }
 });
-
-
-// Endpoint to handle Google sign-up
-/*app.post('/register/google', async (req, res) => {
-  const { token, email, firstName, lastName } = req.body;
-
-  try {
-    // Verify Google token
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: '55269184028-f6oopb7bk04spr4p7ns05at5arfadl6t.apps.googleusercontent.com', // Replace with your Google Client ID
-    });
-    const payload = ticket.getPayload();
-
-    // Check if the email from Google matches the email provided by the user
-    if (payload.email !== email) {
-      return res.status(400).json({ success: false, message: 'Email mismatch' });
-    }
-
-    // Create or update user profile in the database
-    const hashedPassword = ''; // You might not need a password for Google sign-up
-    const newUser = await User.create({ email, password: hashedPassword, firstName, lastName });
-
-    return res.status(201).json({ success: true, message: 'User registered successfully' });
-  } catch (error) {
-    console.error('Error:', error);
-    return res.status(500).json({ success: false, message: 'Server error' });
-  }
-});*/
 
 
 
