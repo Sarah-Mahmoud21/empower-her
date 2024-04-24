@@ -1,7 +1,8 @@
 .footer {
   width: 100%;
+  overflow-x: hidden;
   display: grid;
-  grid-template-columns: 33% 33% 33%;
+  grid-template-columns: 32% 32% 32%;
   background-color: #FBF3D5;
 }
 .footer ul {
@@ -26,7 +27,7 @@
 }
 .footer ul li button:hover {
   border: 2px solid white;
-  border-radius: 50%;
+  border-radius: 20px;
 }
 .footer ul .head-title {
   font-size: larger;

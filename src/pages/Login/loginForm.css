@@ -1,34 +1,46 @@
 .container {
+  background-image: url(https://i.fbcd.co/products/resized/resized-750-500/a-modern-womens-day-background-4-a1fb1b814a3ef785e2f277ba2408623c1b0edd112b7c5197c3393f1853ce1a6a.jpg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  margin-top: 3px;
+  margin-bottom: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 95%;
   height: 500px;
   background-color: #FEFBF3;
 }
-.container .header {
+.container h1 {
   text-align: center;
   color: #D37676;
   font-size: 30px;
 }
-.container .close {
-  position: absolute;
-  background: none;
-  border: none;
-  color: #D37676;
-  right: 1%;
-  top: 1%;
-  font-size: 30px;
+.container form {
+  background-color: rgba(254, 251, 243, 0.5);
+  height: 350px;
+  border-radius: 15px;
+  text-align: center;
 }
-.container button[type=submit] {
-  margin-top: 5px;
-  width: 178px;
+.container form button[type=submit] {
+  width: 310px;
+  height: 25px;
   color: #FEFBF3;
   font-size: 15px;
   background-color: #D37676;
 }
-.container input[type=date] {
-  width: 173px;
+.container form input {
+  width: 300px;
+  height: 20px;
+  margin: 5px;
+}
+.container form a {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+.container form a:hover {
+  color: #D37676;
 }
 
 @media only screen and (min-width: 1023px) {

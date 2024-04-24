@@ -65,7 +65,8 @@ const LoginForm = () => {
     <div className="container">
       <form onSubmit={handleSubmit}>
         <div>
-          <p className="header">Login</p>
+        <h1>Login</h1>
+          <h3>Login with your data that you entered during registration</h3>
           </div>
           {error && <p className="error">{error}</p>}
           {successMessage && <p className="success">{successMessage}</p>} {/* Render success message */}
@@ -89,11 +90,11 @@ const LoginForm = () => {
             required
           />
         </div>
-        <button type="submit">Submit</button>
-        <hr/>
-        don' have an account?
-        <Link to='/register'> register</Link>
+        <button type="submit">Login</button><br/>
+        Don't Have An Account? 
+        <Link to='/register'>  Register</Link>
       </form>
+      
     </div>
     
     <Footer/>

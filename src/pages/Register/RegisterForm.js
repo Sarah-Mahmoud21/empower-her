@@ -59,7 +59,8 @@ const RegisterForm = () => {
     <div className="container">
       <form onSubmit={handleSubmit}>
         <div>
-          <p className="header">Sign up</p>
+          <h1>Sign Up</h1>
+          <h3>Sign up and Join our community</h3>
         </div>
         {error && <p className="error">{error}</p>}
         {successMessage && <p className="success">{successMessage}</p>} {/* Render success message */}
@@ -105,8 +106,8 @@ const RegisterForm = () => {
           />
         </div>
         <button type="submit">Submit</button><br/>
-        already have an account?
-        <Link to="/login">Login</Link>
+        Already Have An Account?
+        <Link to="/login"> Login</Link>
       </form>
     </div>
     <Footer/>

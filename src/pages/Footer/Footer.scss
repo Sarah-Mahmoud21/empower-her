@@ -13,8 +13,9 @@
 
 .footer {
     width: 100%;
+    overflow-x: hidden;
     display: grid;
-    grid-template-columns: 33% 33% 33%;
+    grid-template-columns: 32% 32% 32%;
     background-color: $pink;
   
     ul {
@@ -31,7 +32,7 @@
           margin: 5px;
           &:hover {
             border: 2px solid white;
-            border-radius: 50%;
+            border-radius: 20px;
           }
         }
       }
