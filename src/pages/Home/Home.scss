@@ -64,6 +64,8 @@ body {
         font-size: 20px;
         @include buttons();
         margin-right:5px;
+        font-size: 15px;
+
         
       }
       a{
@@ -155,6 +157,13 @@ body {
         li {
           display: flex;
         }
+      }
+      .icons{
+        li{
+        button{
+          font-size: 20px;
+        }
+      }
       }
     }
   }

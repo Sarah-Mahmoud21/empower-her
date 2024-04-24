@@ -5,6 +5,8 @@ import axios from 'axios';
 import { getToken } from '../tokenUtils';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import '../ProfilePage/ProfilePage.css';
+import { Link } from 'react-router-dom';
 
 function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -30,17 +32,47 @@ function ProfilePage() {
     });
   }, [token]); // Run effect whenever token changes
 
+  const handleLogout = () => {
+    // Perform logout actions (clear token, etc.)
+    localStorage.removeItem("token");
+  };
+
   return (
     <>
       <Header />
       <div>
-        <h2>Profile Page</h2>
+       
         {user ? (
-          <div>
-            <p>Name: {user.firstName} {user.lastName}</p>
-            <p>Email: {user.email}</p>
-            {/* Additional user information can be displayed here */}
+          <div className='profile-page'>
+          <div className='profile-links'>
+            <div className='pic'>
+            <img src={user.img? user.img :'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'}/>
+              <h3>{user.firstName } {user.lastName}</h3>
+              </div>
+              <Link>My orders</Link><br/>
+              <Link>wishlist</Link><br/>
+              <Link>Notifications</Link><br/>
+              <hr/><br/>
+              <button onClick={handleLogout}>Logout</button>       
           </div>
+          <div className='profile-info'>
+          <div className='info'>
+            <h3>My profile</h3>   
+          <p><label>First Name</label> {user.firstName}</p>
+          <p><label>last Name</label> {user.lastName}</p>
+          <p><label>Email</label> {user.email}</p>
+          {/* <p><label>birthday</label>  {user.birthday}</p> */}
+          <button>Change password</button>
+          </div> 
+         <div className='pic'>
+         <img src={user.img?user.img:'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'}/>
+         <br/>
+         <button>Upload new photo</button>
+         </div>
+        </div>
+        </div>//page
+
+
         ) : (
           <p>Loading...</p>
         )}

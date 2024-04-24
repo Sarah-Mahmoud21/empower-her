@@ -10,6 +10,7 @@ const PORT = 4000;
 const { OAuth2Client } = require('google-auth-library'); // Import Google Auth Library
 const client = new OAuth2Client('55269184028-f6oopb7bk04spr4p7ns05at5arfadl6t.apps.googleusercontent.com'); // Replace with your Google Client ID
 const multer = require('multer'); 
+const path = require('path');
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -17,6 +18,7 @@ mongoose.connect('mongodb+srv://sama:S123456@cluster0.28oglsd.mongodb.net/?retry
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 
 const UserSchema = new mongoose.Schema({
   email: {
@@ -57,10 +59,7 @@ const MembershipSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  fullAddress: {
-    type: String,
-    required: true
-  },
+ 
   mobileNumber: {
     type: String,
     required: true
@@ -98,6 +97,28 @@ const MembershipSchema = new mongoose.Schema({
 
 const Membership = mongoose.model('Membership', MembershipSchema);
 
+const OpportunitiesSchema = new mongoose.Schema({
+  fullName: {
+    type: String,
+    required: true
+  },
+  address: {
+    type: String,
+    required: true
+  },
+ 
+  mobileNumber: {
+    type: String,
+    required: true
+  },
+  emailAddress: {
+    type: String,
+    required: true
+  },
+  cv: [String]
+})
+const Opportunities = mongoose.model('opportunities', OpportunitiesSchema);
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/');
@@ -106,16 +127,12 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + '-' + file.originalname);
   }
 });
-const fullPath = path.join(__dirname, './uploads');
-const upload = multer({ dest: fullPath, storage });
+const upload = multer({ storage: storage });
 
 app.post('/membership', upload.array('projectPictures'), async (req, res) => {
   try {
     const membershipData = req.body;
-    const projectPictures = req.files.map(file => file.path)// Ensure that req.files is properly defined    console.log("Request body:", req.body);
-    console.log("Uploaded files:", req.files);
-    console.log("Project pictures:", projectPictures);
-
+    const projectPictures = req.files.map(file => file.path);
     const newMembership = await Membership.create({ ...membershipData, projectPictures });
     res.status(201).json({ success: true, message: 'Membership application submitted successfully' });
   } catch (error) {
@@ -124,7 +141,17 @@ app.post('/membership', upload.array('projectPictures'), async (req, res) => {
   }
 });
 
-
+app.post('/opportunities', upload.array('cv'), async (req, res) => {
+  try {
+    const oppData = req.body;
+    const cv = req.files.map(file => file.path);
+    const newOpp = await Opportunities.create({ ...oppData, cv });
+    res.status(201).json({ success: true, message: 'opp application submitted successfully' });
+  } catch (error) {
+    console.error('Error submitting opp application:', error);
+    res.status(500).json({ success: false, message: 'Failed to submit opp application' });
+  }
+});
 
 app.post('/register', async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
@@ -144,7 +171,7 @@ app.post('/register', async (req, res) => {
   }
   // Ensure other fields are provided as well
   if (!email || !password || !firstName || !lastName) {
-    return res.status(400).jason({ success: false, message: 'Please provide all required fields' });
+    return res.status(400).json({ success: false, message: 'Please provide all required fields' });
 }
 const hashedPassword = await bcrypt.hash(password, 10);
 try {

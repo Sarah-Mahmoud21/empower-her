@@ -1,17 +1,54 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
 import "../pages/Membership/membership.css";// Import SCSS file
+import axios from "axios";
+import { getToken } from "./tokenUtils";
 
 function Opportunities() {
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const token = getToken();
   const [formData, setFormData] = useState({
     fullName: "",
     address: "",
-    fullAddress: "",
     mobileNumber: "",
     emailAddress: "",
-    cv: "",
+    cv: [],
   });
+  useEffect(() => {
+    if (!token) {
+      setFormData({
+        fullName: "",
+        address: "",
+        mobileNumber: "",
+        emailAddress: "",
+       cv:[]
+      });
+    }
+
+    // Fetch user data when component mounts
+    axios.get('http://localhost:4000/profile', {
+      headers: {
+        Authorization: `Bearer ${token}` // Include token in Authorization header
+      }
+    })
+    .then(response => {
+      const user = response.data.user;
+      setFormData({
+        fullName: user.firstName + user.lastName,
+        address: "",
+        mobileNumber: "",
+        emailAddress: user.email,
+        cv:[],
+      });
+    })
+
+    .catch(error => {
+      console.error('Error fetching user data:', error);
+    });
+  }, [token]); // Run effect whenever token changes
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,10 +58,64 @@ function Opportunities() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleCvUpload = (e) => {
+    const files = Array.from(e.target.files);
+    console.log("Uploaded files:", files); // Log uploaded files to check if they're received properly
+
+    const uploadedCv = files.map((file) => file);
+    console.log("Uploaded cv:", uploadedCv); // Log uploaded picture URLs to check if they're created properly
+
+    setFormData({
+      ...formData,
+      cv: uploadedCv,
+    });
+  };
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log(formData); // You can do something with the form data, like sending it to an API
+    console.log(formData);
+
+    let formedData = new FormData();
+
+    for (let [key, value] of Object.entries(formData)) {
+      if (Array.isArray(value)) {
+        value.forEach((item) => {
+          formedData.append(key, item);
+        });
+      } else {
+        formedData.append(key, value);
+      }
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/opportunities",
+        formedData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      if (!response.data.success) {
+        throw new Error("Failed to sign as intern");
+      }
+
+      setSuccessMessage("internship request sent successfully"); // Update success message state
+      setError(""); // Clear any previous error messages
+      setFormData({
+        fullName: "",
+        address: "",
+        mobileNumber: "",
+        emailAddress: "",
+        cv:[]
+      });
+    } 
+    catch (error) {
+      setError(error.message);
+    }
   };
 
   return (
@@ -53,7 +144,7 @@ function Opportunities() {
             volunteer.
           </p>
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} enctype="multipart/form-data">
             <div className="form-group">
               <label htmlFor="fullName">Full Name </label>
               <br />
@@ -73,17 +164,6 @@ function Opportunities() {
                 id="address"
                 name="address"
                 value={formData.address}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="fullAddress">Full Address</label>
-              <br />
-              <input
-                type="text"
-                id="fullAddress"
-                name="fullAddress"
-                value={formData.fullAddress}
                 onChange={handleChange}
               />
             </div>
@@ -116,8 +196,9 @@ function Opportunities() {
               type="file"
               id="cv"
               name="cv"
-              accept=".pdf,.doc,.docx" 
-              onChange={handleChange}
+              accept=".pdf,.doc,.docx"
+              multiple 
+              onChange={handleCvUpload}
             />
           </div>
             <button type="submit">Submit</button>
