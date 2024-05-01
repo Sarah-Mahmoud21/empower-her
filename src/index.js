@@ -8,6 +8,9 @@ import Opportunities from './pages/Opportunities';
 import LoginForm from './pages/Login/LoginForm';
 import Register from "./pages/Register/RegisterForm";
 import ProfilePage from './pages/ProfilePage/ProfilePage';
+import Manager from './pages/Manager/Manager';
+import ManagerMembership from './pages/ManagerMembership/ManagerMembership';
+import Internships from './pages/Internships/Internships';
 
 
 const router = createBrowserRouter([
@@ -36,8 +39,20 @@ const router = createBrowserRouter([
     element:<Register/>
   },
   {
-    path: '/profile',
+    path: '/profile/:isManager', // Include isManager parameter in the URL
     element: <ProfilePage/>
+  },
+  {
+    path: '/manager',
+    element: <Manager/>
+  },
+  {
+    path: '/managermembership',
+    element: <ManagerMembership/>
+  },
+  {
+    path: '/internship',
+    element: <Internships/>
   }
 ]);
 

@@ -15,7 +15,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 
-function Header() {
+function ManagerHeader() {
   const token = getToken(); 
   const navigate = useNavigate();
 
@@ -46,25 +46,23 @@ function Header() {
           </button>
           <h2>Empower Her</h2>
           <ul className="reference">
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/Support">Support Us</Link>
-            </li>
-            <li>
-              <Link to="/Membership">Membership</Link>
-            </li>
-            <li>
-              <Link to="/Opportunities">Opportunities </Link>
-            </li>
+          <li>
+          <Link to="/manager">Home</Link>
+        </li>
+    
+        <li>
+          <Link to="/managermembership">View Memberships</Link>
+        </li>
+        <li>
+          <Link to="/internship">View internships </Link>
+        </li>
           </ul>
 
           <ul className="icons">
             <li>
               {isLoggedIn ? (
                 <>
-                <Link to="/profile" >
+                <Link to="/profile/true" >
                 <FontAwesomeIcon icon={faImagePortrait} />
               </Link>
                 <button onClick={handleLogout} title="logout">
@@ -113,20 +111,18 @@ function Bar() {
           </button>
         </li>
         <li>
-          <Link to="/">Home</Link>
+          <Link to="/manager">Home</Link>
+        </li>
+    
+        <li>
+          <Link to="/managermembership">View Memberships</Link>
         </li>
         <li>
-          <Link to="/support">Support Us</Link>
-        </li>
-        <li>
-          <Link to="/membership">Membership</Link>
-        </li>
-        <li>
-          <Link to="/opportunities">Opportunities </Link>
+          <Link to="/internship">View internships </Link>
         </li>
       </ul>
     </>
   );
 }
 
-export default Header;
+export default ManagerHeader;

@@ -1,16 +1,22 @@
 // ProfilePage.js
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState} from 'react';
+import { useParams } from "react-router-dom";
+
 import axios from 'axios';
 import { getToken } from '../tokenUtils';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import '../ProfilePage/ProfilePage.css';
 import { Link } from 'react-router-dom';
+import ManagerHeader from '../Header/ManagerHeader';
 
 function ProfilePage() {
   const [user, setUser] = useState(null);
   const token = getToken();
+  const { isManager } = useParams();
+  const isManagerBool = isManager === 'true';
+  
 
   useEffect(() => {
     if (!token) {
@@ -39,7 +45,7 @@ function ProfilePage() {
 
   return (
     <>
-      <Header />
+    {isManagerBool ? <ManagerHeader />:<Header />  }
       <div>
        
         {user ? (
