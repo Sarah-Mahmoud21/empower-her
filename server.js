@@ -49,6 +49,7 @@ const UserSchema = new mongoose.Schema({
     type: String, // Adding lastName field
     required: true,
   },
+  profilePicture:String // Add profilePicture field
 });
 
 const User = mongoose.model("User", UserSchema);
@@ -375,3 +376,72 @@ app.get("/profile", verifyToken, async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+// Add this code after the "/profile" endpoint
+
+app.post("/upload-photo", verifyToken, upload.single("photo"), async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    // Update the user's profile picture with the path of the uploaded photo
+    user.profilePicture = req.file.path;
+    await user.save();
+
+    return res.status(200).json({ success: true, message: "Photo uploaded successfully" });
+  } catch (error) {
+    console.error("Error uploading photo:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+// Add this code after the "/upload-photo" endpoint
+
+app.post("/change-password", verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { currentPassword, newPassword } = req.body;
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    // Check if the user exists
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Check if the current password matches the user's stored password
+    const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ success: false, message: "Incorrect current password" });
+    }
+
+    // Validate the new password
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character",
+      });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the user's password
+    user.password = hashedPassword;
+    await user.save();
+
+    // Send success response
+    return res.status(200).json({ success: true, message: "Password changed successfully" });
+  } catch (error) {
+    console.error("Error changing password:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+

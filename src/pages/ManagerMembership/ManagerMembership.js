@@ -28,7 +28,7 @@ function ManagerMembership() {
   );
 
   const handleImageClick = (index) => {
-    setSelectedImageIndex(index +1);
+    setSelectedImageIndex(index);
   };
 
   const handleCloseSlider = () => {
@@ -87,7 +87,7 @@ function ManagerMembership() {
                       margin: "5px",
                       cursor: "pointer",
                     }}
-                    onClick={() => handleImageClick(index)}
+                    onClick={() => handleImageClick(index+2)}
                   />
                 ))}
               </div>

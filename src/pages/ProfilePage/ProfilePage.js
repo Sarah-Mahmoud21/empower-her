@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState} from 'react';
 import { useParams } from "react-router-dom";
-
 import axios from 'axios';
 import { getToken } from '../tokenUtils';
 import Header from '../Header/Header';
@@ -10,12 +9,61 @@ import Footer from '../Footer/Footer';
 import '../ProfilePage/ProfilePage.css';
 import { Link } from 'react-router-dom';
 import ManagerHeader from '../Header/ManagerHeader';
+import { useNavigate } from 'react-router-dom';
+
 
 function ProfilePage() {
   const [user, setUser] = useState(null);
+  const [newPhoto, setNewPhoto] = useState(null); // State to store the new photo
   const token = getToken();
   const { isManager } = useParams();
   const isManagerBool = isManager === 'true';
+  const navigate = useNavigate();
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordChangeError, setPasswordChangeError] = useState('');
+  const [isChangingPassword, setIsChangingPassword] = useState(false); // State to track if the user is changing password
+  const [passwordChangeMessage, setPasswordChangeMessage] = useState('');
+
+
+const handleChangePassword = () => {
+  // Validation checks
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    setPasswordChangeError('Please fill in all fields');
+    return;
+  }
+  if (newPassword !== confirmPassword) {
+    setPasswordChangeError('New password and confirm password must match');
+    return;
+  }
+
+  // Send request to change password
+  axios.post('http://localhost:4000/change-password', {
+    currentPassword,
+    newPassword,
+  }, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  })
+  .then(response => {
+    setPasswordChangeMessage(response.data.message);
+
+    setPasswordChangeError('');
+    // Clear input fields
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+
+  })
+  .catch(error => {
+    setPasswordChangeError('Failed to change password. Please try again.');
+    console.error('Error changing password:', error);
+  });
+}
+
+
   
 
   useEffect(() => {
@@ -41,7 +89,60 @@ function ProfilePage() {
   const handleLogout = () => {
     // Perform logout actions (clear token, etc.)
     localStorage.removeItem("token");
+    navigate('/login');
+
   };
+
+  const handlePhotoUpload = () => {
+    if (!newPhoto) {
+      console.error('No photo selected');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('photo', newPhoto);
+
+    // Send photo to the server
+    axios.post('http://localhost:4000/upload-photo', formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(response => {
+      // If upload is successful, update the user's profile with the new photo URL
+      setUser(prevUser => ({
+        ...prevUser,
+        img: response.data.photoUrl // Assuming the server returns the URL of the uploaded photo
+      }));
+    })
+    .catch(error => {
+      console.error('Error uploading photo:', error);
+    });
+  };
+
+  const handleFileChange = (event) => {
+    // Update state with the selected file
+    setNewPhoto(event.target.files[0]);
+  };
+  const togglePasswordForm = () => {
+    setIsChangingPassword(prevState => !prevState);
+  };
+
+  const openForm =() =>{
+    return(
+      <div className='change-pass'>
+        <label htmlFor="currentPassword">Current Password</label><br/>
+        <input type="password" id="currentPassword" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} /><br/>
+        <label htmlFor="newPassword">New Password</label><br/>
+        <input type="password" id="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} /><br/>
+        <label htmlFor="confirmPassword">Confirm New Password</label><br/>
+        <input type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} /><br/>
+        {passwordChangeError && <p className="error">{passwordChangeError}</p>}
+        <button onClick={handleChangePassword}>Change password</button>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -52,7 +153,7 @@ function ProfilePage() {
           <div className='profile-page'>
           <div className='profile-links'>
             <div className='pic'>
-            <img src={user.img? user.img :'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'}/>
+            <img src={user.profilePicture?`http://localhost:4000/${user.profilePicture}`:'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'} alt="Profile Picture" />
               <h3>{user.firstName } {user.lastName}</h3>
               </div>
               <Link>My orders</Link><br/>
@@ -65,15 +166,16 @@ function ProfilePage() {
           <div className='info'>
             <h3>My profile</h3>   
           <p><label>First Name</label> {user.firstName}</p>
-          <p><label>last Name</label> {user.lastName}</p>
+          <p><label>Last Name</label> {user.lastName}</p>
           <p><label>Email</label> {user.email}</p>
           {/* <p><label>birthday</label>  {user.birthday}</p> */}
-          <button>Change password</button>
+          <button onClick={togglePasswordForm}>Change password</button>
           </div> 
          <div className='pic'>
-         <img src={user.img?user.img:'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'}/>
+         <img src={user.profilePicture?`http://localhost:4000/${user.profilePicture}`:'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'} alt="Profile Picture" />
          <br/>
-         <button>Upload new photo</button>
+         <input type="file" onChange={handleFileChange} /><br/>
+         <button onClick={handlePhotoUpload}>Upload new photo</button>
          </div>
         </div>
         </div>//page
@@ -82,6 +184,16 @@ function ProfilePage() {
         ) : (
           <p>Loading...</p>
         )}
+        
+         {isChangingPassword && openForm()}
+         <div>
+        {/* your profile content */}
+        {passwordChangeMessage && (
+          <div className="success-message">
+            {passwordChangeMessage}
+          </div>
+        )}
+      </div>
       </div>
       <Footer />
     </>

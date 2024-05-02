@@ -30,9 +30,10 @@
     margin-bottom: 15px;
     img {
       width: 30%;
+      aspect-ratio: 1/1;
       border-radius: 50%;
       margin-right: 20px;
-      object-fit: contain;
+      object-fit: cover;
     }
   }
 }
@@ -68,10 +69,15 @@
   }
   .pic {
     position: relative;
-    left: 20%;
+    left: 18%;
     img {
       border-radius: 50%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
       width: 35%;
+    }
+    input{
+      font-size: 10px;
     }
     button {
       background-color: $peach;
@@ -84,7 +90,16 @@
     }
   }
 }
-
+.change-pass{
+  background-color: $pink;
+  width: 80%;
+  height:150px;
+  border-radius: 10px;
+  margin: auto;
+  margin-bottom:5px;
+  color:$blue;
+  text-align: center;
+}
 @include breakpoint(large) {
   .profile-page {
     position: relative;
@@ -96,7 +111,7 @@
   .profile-info {
     width: 2000px;
     .pic {
-      left:40%;
+      left:30%;
     }
   }
 
