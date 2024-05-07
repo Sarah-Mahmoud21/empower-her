@@ -35,9 +35,19 @@ function ManagerMembership() {
     setSelectedImageIndex(null);
   };
 
-  const approve =(memberId) => {
-
+  const approve = (memberId) => {
+    axios.post(`http://localhost:4000/members/${memberId}`)
+      .then((response) => {
+        // Remove the approved member from the members state
+        setMembers((prevMembers) =>
+          prevMembers.filter((member) => member._id !== memberId)
+        );
+      })
+      .catch((error) => {
+        console.error("Error approving membership:", error);
+      });
   };
+  
   const reject = (memberId) => {
     axios
     .delete(`http://localhost:4000/membership/${memberId}`)
@@ -50,20 +60,20 @@ function ManagerMembership() {
     .catch((error) => {
       console.error("Error rejecting member:", error);
     });
-};
+  };
 
-
- 
-    return (
-      <>
-        <ManagerHeader />
-        <div>
-          <h1>Membership Applicants</h1>
-          {members.map((member, memberIndex) => (
+  return (
+    <>
+      <ManagerHeader />
+      <div>
+      
+        {members.length === 0 ? (
+          <h2>All applications have been reviewed</h2>        ) : (
+          members.map((member, memberIndex) => (
             <div  className="mem-info" key={member._id}>
               <div className="buttons">
-              <button onClick={() => approve(member._id)}>Approve</button>
-              <button onClick={() => reject(member._id)}>Reject</button>
+                <button onClick={() => approve(member._id)}>Approve</button>
+                <button onClick={() => reject(member._id)}>Reject</button>
               </div>
               <p><strong>Name:</strong> {member.fullName}</p>
               <p><strong>Email:</strong> {member.emailAddress}{member.email}</p>
@@ -92,24 +102,24 @@ function ManagerMembership() {
                 ))}
               </div>
             </div>
-          ))}
-        </div>
+          ))
+        )}
+      </div>
       {selectedImageIndex !== null && (
-  <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.8)", zIndex: 1000, display: "flex", justifyContent: "center", alignItems: "center" }}>
-    <div style={{ maxWidth: "80%", position: "relative", zIndex: 1001 }}>
-      <button style={{ position: "absolute", top: 0, right: 0, cursor: "pointer", color: "#fff", fontSize: "40px", padding: "5px", zIndex: 1002 }} onClick={handleCloseSlider} >&times;</button>
-      <ImageGallery
-        items={images}
-        startIndex={selectedImageIndex}
-        showThumbnails={false}
-        showFullscreenButton={false}
-        showPlayButton={false}
-        showBullets={false}
-      />
-    </div>
-  </div>
-)}
-
+        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.8)", zIndex: 1000, display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <div style={{ maxWidth: "80%", position: "relative", zIndex: 1001 }}>
+            <button style={{ position: "absolute", top: 0, right: 0, cursor: "pointer", color: "#fff", fontSize: "40px", padding: "5px", zIndex: 1002 }} onClick={handleCloseSlider} >&times;</button>
+            <ImageGallery
+              items={images}
+              startIndex={selectedImageIndex}
+              showThumbnails={false}
+              showFullscreenButton={false}
+              showPlayButton={false}
+              showBullets={false}
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 }

@@ -1,4 +1,7 @@
 @import "../variables";
+body{
+    overflow-x: hidden;
+}
 h1{
     text-align: center;
     color:$peach;
@@ -13,6 +16,13 @@ h1{
         strong{
             color:$peach;
 
+        }
+        a{
+            text-decoration: none;
+            color:$blue;
+            &:hover{
+                color:$peach;
+            }
         }
     }
     .buttons{

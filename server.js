@@ -138,6 +138,81 @@ const ManagerSchema = new mongoose.Schema({
 const Manager = mongoose.model("Manager", ManagerSchema);
 
 module.exports = Manager;
+const InternshipSchema = new mongoose.Schema({
+  fullName: {
+    type: String,
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  mobileNumber: {
+    type: String,
+    required: true,
+  },
+  emailAddress: {
+    type: String,
+    required: true,
+  },
+  employeeId: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'members', // Reference to the Manager model
+  },
+  
+});
+
+const Internship = mongoose.model("Internship", InternshipSchema);
+
+const MemberSchema = new mongoose.Schema({
+  fullName: {
+    type: String,
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  mobileNumber: {
+    type: String,
+    required: true,
+  },
+  emailAddress: {
+    type: String,
+    required: true,
+  },
+  projectSummary: {
+    type: String,
+    required: true,
+  },
+});
+
+const Member = mongoose.model("Member", MemberSchema);
+
+const TaskSchema = new mongoose.Schema({
+  memberId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Member", // Reference to the Member model
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  deadline: {
+    type: Date,
+    required: true,
+  },
+  progress: {
+    type: String,
+    required: false,
+    default: '0%', 
+  },
+});
+
+const Task = mongoose.model("Task", TaskSchema);
+
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -241,6 +316,48 @@ app.post("/opportunities", upload.array("cv"), async (req, res) => {
       .json({ success: false, message: "Failed to submit opp application" });
   }
 });
+// Add this code to your Express backend, typically in your server.js or index.js file
+
+// Fetch volunteer/internship opportunities
+app.get("/opportunities", async (req, res) => {
+  try {
+    // Fetch all opportunities from the database
+    const opportunities = await Opportunities.find();
+
+    // Check if opportunities exist
+    if (!opportunities) {
+      return res.status(404).json({ success: false, message: "No opportunities found" });
+    }
+
+    // If opportunities exist, send them to the client
+    return res.status(200).json({ success: true, opportunities });
+  } catch (error) {
+    console.error("Error fetching opportunities:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+app.delete("/opportunities/:id", async (req, res) => {
+  const internId = req.params.id;
+  try {
+    const deletedIntern = await Opportunities.findByIdAndDelete(internId);
+    if (!deletedIntern) {
+      return res
+        .status(404)
+        .json({ success: false, message: "intern not found" });
+    }
+    res
+      .status(200)
+      .json({ success: true, message: "internship application rejected" });
+  } catch (error) {
+    console.error("Error rejecting internship application:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to reject internship application" });
+  }
+});
+
+
 
 app.post("/register", async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
@@ -444,4 +561,194 @@ app.post("/change-password", verifyToken, async (req, res) => {
   }
 });
 
+app.post("/internships/:id", async (req, res) => {
+  const opportunityId = req.params.id;
+  try {
+    const opportunity = await Opportunities.findById(opportunityId);
+    if (!opportunity) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Opportunity not found" });
+    }
+    // Move the opportunity to the Internship table
+    const newInternship = await Internship.create({
+      fullName: opportunity.fullName,
+      address: opportunity.address,
+      mobileNumber: opportunity.mobileNumber,
+      emailAddress: opportunity.emailAddress,
+    });
+    // Delete the opportunity from the Opportunities table
+    await Opportunities.findByIdAndDelete(opportunityId);
+    res
+      .status(201)
+      .json({
+        success: true,
+        message: "Internship opportunity approved successfully",
+        internship: newInternship,
+      });
+  } catch (error) {
+    console.error("Error approving internship opportunity:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to approve internship opportunity" });
+  }
+});
 
+app.post("/members/:id", async (req, res) => {
+  const memberId = req.params.id;
+  try {
+    const member = await Membership.findById(memberId);
+    if (!member) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Membership not found" });
+    }
+    // Move the member to the Members table
+    await Member.create({
+      fullName: member.fullName,
+      address: member.address,
+      mobileNumber: member.mobileNumber,
+      emailAddress: member.emailAddress,
+      projectSummary: member.projectSummary,
+    });
+    // Delete the member from the Membership table
+    await Membership.findByIdAndDelete(memberId);
+    res
+      .status(201)
+      .json({
+        success: true,
+        message: "Membership application approved successfully",
+      });
+  } catch (error) {
+    console.error("Error approving membership application:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to approve membership application" });
+  }
+});
+app.get("/Member", async (req, res) => {
+  try {
+    const members = await Member.find();
+    if (!members) {
+      return res.status(404).json({ success: false, message: "No members found" });
+    }
+    return res.status(200).json({ success: true, members });
+  } catch (error) {
+    console.error("Error fetching opportunities:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+app.get("/Internship", async (req, res) => {
+  try {
+    const interns = await Internship.find();
+    if (!interns) {
+      return res.status(404).json({ success: false, message: "No interns found" });
+    }
+    return res.status(200).json({ success: true, interns });
+  } catch (error) {
+    console.error("Error fetching interns:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+// In your Express backend
+app.post("/tasks", async (req, res) => {
+  try {
+    const { memberId, description, deadline } = req.body;
+    const newTask = await Task.create({
+      memberId,
+      description,
+      deadline,
+      progress: '0%', // Set default progress
+    });
+    res.status(201).json({ success: true, task: newTask });
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res.status(500).json({ success: false, message: "Failed to create task" });
+  }
+});
+app.get("/tasks/:id", async (req, res) => {
+  try {
+    const memberId = req.params.id;
+    // Find all tasks associated with the given member ID
+    const tasks = await Task.find({ memberId });
+
+    if (!tasks || tasks.length === 0) {
+      return res.status(404).json({ success: false, message: "No tasks found for this member" });
+    }
+
+    // Return the tasks associated with the member ID
+    res.status(200).json({ success: true, tasks });
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+
+// Endpoint to update task progress
+app.put("/tasks/:id", async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    const { progress } = req.body;
+    const updatedTask = await Task.findByIdAndUpdate(taskId, { progress }, { new: true });
+    if (!updatedTask) {
+      return res.status(404).json({ success: false, message: "Task not found" });
+    }
+    res.status(200).json({ success: true, task: updatedTask });
+  } catch (error) {
+    console.error("Error updating task progress:", error);
+    res.status(500).json({ success: false, message: "Failed to update task progress" });
+  }
+});
+
+// Endpoint to delete a task
+app.delete("/tasks/:id", async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    const deletedTask = await Task.findByIdAndDelete(taskId);
+    if (!deletedTask) {
+      return res.status(404).json({ success: false, message: "Task not found" });
+    }
+    res.status(200).json({ success: true, message: "Task deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    res.status(500).json({ success: false, message: "Failed to delete task" });
+  }
+});
+
+app.put("/Internship/:internshipId", async (req, res) => {
+  try {
+    const { internshipId } = req.params;
+    const { employeeId } = req.body;
+    console.log(employeeId);
+
+    // Update the Internship document with the provided employeeId
+    const updatedInternship = await Internship.findByIdAndUpdate(
+      internshipId,
+      { $set: { employeeId } }, // Use $set to update the specific field
+      { new: true }
+    );
+
+    // Return the updated Internship document
+    res.status(200).json({ success: true, internship: updatedInternship });
+  } catch (error) {
+    console.error("Error assigning employee to internship:", error);
+    res.status(500).json({ success: false, message: "Failed to assign employee to internship" });
+  }
+});
+
+app.delete("/Internship/:id", async (req, res) => {
+  try {
+    const internId = req.params.id;
+    const deletedIntern = await Internship.findByIdAndDelete(internId);
+    if (!deletedIntern) {
+      return res.status(404).json({ success: false, message: "intern not found" });
+    }
+    res.status(200).json({ success: true, message: "intern deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting intern:", error);
+    res.status(500).json({ success: false, message: "Failed to delete intern" });
+  }
+});

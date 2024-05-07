@@ -1,3 +1,7 @@
+body {
+  overflow-x: hidden;
+}
+
 h1 {
   text-align: center;
   color: #D37676;
@@ -12,6 +16,13 @@ h1 {
   color: #265073;
 }
 .mem-info P strong {
+  color: #D37676;
+}
+.mem-info P a {
+  text-decoration: none;
+  color: #265073;
+}
+.mem-info P a:hover {
   color: #D37676;
 }
 .mem-info .buttons {

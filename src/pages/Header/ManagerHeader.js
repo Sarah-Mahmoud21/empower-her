@@ -39,7 +39,7 @@ function ManagerHeader() {
   return (
     <>
       <Bar showBar={openSideBar} />
-      <header className="header">
+      <header className="header" >
         <nav>
           <button className="nav-bar" onClick={openSideBar}>
             <FontAwesomeIcon icon={faBars} />

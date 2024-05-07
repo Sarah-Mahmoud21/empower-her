@@ -1,0 +1,48 @@
+@import "../variables";
+.Manager{
+    button{
+        background-color: #968C83 ;
+        color:#FFF5EA;
+        border:none;
+        border-radius: 10px;
+        margin:2%;
+        width:45%;
+        font-size: 20px;
+        height:30px;
+    }
+    .card{
+        box-shadow: 5px 10px 5px #888888;
+
+        width: 95%;
+        border-radius: 10px;
+        margin:2%;
+        background-color: #FFF5EA;
+        padding: 5px;
+        h1{
+            color: #A87676;
+            text-align: start;
+        }
+        p{
+            color: #968C83;
+        }
+        button{
+            background-color: #A87676;
+            width:30%;
+            margin:10%;
+            margin-bottom: 1%;
+            margin-top:1%;
+        }
+        form{
+            input{
+                width:30%;
+                height:30px;
+            }
+            
+            button{
+                width:30%;
+                margin: 0%;
+                margin-top: 1%;
+            }
+        }
+    }
+}
