@@ -11,6 +11,7 @@ import ProfilePage from './pages/ProfilePage/ProfilePage';
 import Manager from './pages/Manager/Manager';
 import ManagerMembership from './pages/ManagerMembership/ManagerMembership';
 import Internships from './pages/Internships/Internships';
+import Notification from './pages/Notification/Notification';
 
 
 const router = createBrowserRouter([
@@ -53,7 +54,12 @@ const router = createBrowserRouter([
   {
     path: '/internship',
     element: <Internships/>
+  },
+  {
+    path: '/notification/:memberId/:isMember',
+    element: <Notification />
   }
+  
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

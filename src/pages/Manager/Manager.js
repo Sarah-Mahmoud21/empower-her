@@ -98,18 +98,21 @@ function Manager() {
   };
   const checkProgress = async (memberId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:4000/tasks/${memberId}`
-      );
+      const response = await axios.get(`http://localhost:4000/tasks/${memberId}`);
       const tasksWithProgress = response.data.tasks;
-
-      // Update the state to include the tasks with progress values
+  
       setTasks(tasksWithProgress);
       setshowProgress(!showprogress);
     } catch (error) {
-      console.error("Error fetching tasks:", error);
+      if (error.response && error.response.status === 404) {
+        setTasks([]);
+        setshowProgress(!showprogress);
+      } else {
+        console.error("Error fetching tasks:", error);
+      }
     }
   };
+  
 
   return (
     <>
@@ -128,18 +131,24 @@ function Manager() {
                 <button onClick={() => assignTask(member._id)}>
                   Assign Task
                 </button>
+                
                 <button onClick={() => checkProgress(member._id)}>
                   Check Progress
                 </button>
                 {showprogress ? (
                   <>
-                    {tasks.map((task) => (
-                      <div key={task._id}>
-                        <p>Task: {task.description}</p>
-                        {task.progress && <p>Progress: {task.progress}</p>}{" "}
-                        {/* Display progress if available */}
-                      </div>
-                    ))}
+                  {console.log("Tasks length:", tasks.length)}
+                    {tasks.length > 0 ? (
+                      tasks.map((task) => (
+                        <div key={task._id}>
+                          <p>Task: {task.description}</p>
+                          <p>Status: {task.status}</p>
+                          {task.progress && <p>Progress: {task.progress}</p>}
+                        </div>
+                      ))
+                    ) : (
+                      <p>no tasks available</p>
+                    )}
                   </>
                 ) : (
                   <></>

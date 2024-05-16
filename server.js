@@ -70,7 +70,7 @@ const MembershipSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  emailAddress: {
+  email: {
     type: String,
     required: true,
   },
@@ -117,7 +117,7 @@ const OpportunitiesSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  emailAddress: {
+  email: {
     type: String,
     required: true,
   },
@@ -151,7 +151,7 @@ const InternshipSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  emailAddress: {
+  email: {
     type: String,
     required: true,
   },
@@ -177,7 +177,7 @@ const MemberSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  emailAddress: {
+  email: {
     type: String,
     required: true,
   },
@@ -208,6 +208,11 @@ const TaskSchema = new mongoose.Schema({
     required: false,
     default: '0%', 
   },
+  status:{
+    type :String,
+    required:false,
+    default: 'in progress'
+  }
 });
 
 const Task = mongoose.model("Task", TaskSchema);
@@ -575,7 +580,7 @@ app.post("/internships/:id", async (req, res) => {
       fullName: opportunity.fullName,
       address: opportunity.address,
       mobileNumber: opportunity.mobileNumber,
-      emailAddress: opportunity.emailAddress,
+      email: opportunity.email,
     });
     // Delete the opportunity from the Opportunities table
     await Opportunities.findByIdAndDelete(opportunityId);
@@ -608,7 +613,7 @@ app.post("/members/:id", async (req, res) => {
       fullName: member.fullName,
       address: member.address,
       mobileNumber: member.mobileNumber,
-      emailAddress: member.emailAddress,
+      email: member.email,
       projectSummary: member.projectSummary,
     });
     // Delete the member from the Membership table
@@ -685,6 +690,22 @@ app.get("/tasks/:id", async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
+app.get('/members/:email', async (req, res) => {
+  try {
+    const { email } = req.params; // Extract email from request parameters
+
+    const member = await Member.findOne({ email });
+
+    if (!member) {
+      return res.status(404).json({ error: 'Member not found' });
+    }
+
+    res.json({ memberId: member._id });
+  } catch (error) {
+    console.error('Error fetching member ID:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
 // Endpoint to update task progress
@@ -692,10 +713,23 @@ app.put("/tasks/:id", async (req, res) => {
   try {
     const taskId = req.params.id;
     const { progress } = req.body;
+
+    // Update task progress
     const updatedTask = await Task.findByIdAndUpdate(taskId, { progress }, { new: true });
-    if (!updatedTask) {
-      return res.status(404).json({ success: false, message: "Task not found" });
+
+    // Update status field based on progress and deadline
+    let status;
+    if (progress === '100%') {
+      status = 'completed';
+    } else if (new Date(updatedTask.deadline) < new Date() && progress !== '100%') {
+      status = 'unaccomplished';
+    } else {
+      status = 'in progresss'; // Optional: You can set a default status if needed
     }
+
+    // Update status field in the database
+    await Task.findByIdAndUpdate(taskId, { status });
+
     res.status(200).json({ success: true, task: updatedTask });
   } catch (error) {
     console.error("Error updating task progress:", error);

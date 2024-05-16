@@ -64,7 +64,7 @@ function Header() {
             <li>
               {isLoggedIn ? (
                 <>
-                <Link to="/profile" >
+                <Link to="/profile/false" >
                 <FontAwesomeIcon icon={faImagePortrait} />
               </Link>
                 <button onClick={handleLogout} title="logout">
