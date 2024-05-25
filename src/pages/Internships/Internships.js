@@ -63,7 +63,7 @@ function Internships() {
               <p> <strong>Full Name:</strong> {opportunity.fullName}</p>
               <p><strong>Address: </strong> {opportunity.address}</p>
               <p> <strong>Mobile Number: </strong> {opportunity.mobileNumber}</p>
-              <p><strong>Email Address: </strong> {opportunity.emailAddress}</p>
+              <p><strong>Email Address: </strong> {opportunity.email}</p>
               {/* Render download links for cv files */}
               {opportunity.cv.map((cv, cvIndex) => (
                 <div key={cvIndex}>

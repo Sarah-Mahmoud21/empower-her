@@ -1,0 +1,67 @@
+.product {
+  padding: 1%;
+  display: grid;
+  grid-template-columns: 40% 60%;
+}
+.product .images {
+  margin-right: 5%;
+}
+.product .images img {
+  width: 500px;
+  aspect-ratio: 1/1;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+.product .images .sub-images {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+}
+.product .images .sub-images img {
+  width: 140px;
+  aspect-ratio: 1/1;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+.product .product-info {
+  padding: 8%;
+}
+.product .product-info .head-info {
+  display: flex;
+  justify-content: space-between;
+  font-family: "Muli";
+}
+.product .product-info .sub-header {
+  display: flex;
+  justify-content: space-between;
+}
+.product .product-info .sub-header .quantity {
+  width: 200px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #f2f2f2;
+}
+.product .product-info .sub-header .quantity button {
+  background: none;
+  border: 1px solid #D37676;
+  width: 30px;
+  height: 25px;
+  font-size: 15px;
+}
+.product .product-info .sub-header .add-cart {
+  display: flex;
+}
+.product .product-info .sub-header .add-cart button {
+  margin: 10px;
+  height: 30px;
+  font-size: 15px;
+  font-family: "Muli";
+  border: 1px solid #D37676;
+  border-radius: 10px;
+  background: none;
+}
+.product .product-info .sub-header .add-cart .add {
+  width: 150px;
+  background-color: #D37676;
+}/*# sourceMappingURL=ProductPage.css.map */

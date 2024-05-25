@@ -13,7 +13,7 @@ function Opportunities() {
     fullName: "",
     address: "",
     mobileNumber: "",
-    emailAddress: "",
+    email: "",
     cv: [],
   });
   useEffect(() => {
@@ -22,7 +22,7 @@ function Opportunities() {
         fullName: "",
         address: "",
         mobileNumber: "",
-        emailAddress: "",
+        email: "",
        cv:[]
       });
     }
@@ -39,7 +39,7 @@ function Opportunities() {
         fullName: user.firstName + user.lastName,
         address: "",
         mobileNumber: "",
-        emailAddress: user.email,
+        email: user.email,
         cv:[],
       });
     })
@@ -109,7 +109,7 @@ function Opportunities() {
         fullName: "",
         address: "",
         mobileNumber: "",
-        emailAddress: "",
+        email: "",
         cv:[]
       });
     } 
@@ -179,13 +179,13 @@ function Opportunities() {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="emailAddress">Email Address</label>
+              <label htmlFor="email">Email Address</label>
               <br />
               <input
                 type="email"
-                id="emailAddress"
-                name="emailAddress"
-                value={formData.emailAddress}
+                id="email"
+                name="email"
+                value={formData.email}
                 onChange={handleChange}
               />
             </div>

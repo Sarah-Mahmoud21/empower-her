@@ -210,7 +210,12 @@ function ProfilePage() {
                 <> </>
               ) : (
                 <>
-                  <Link>My orders</Link>
+                  {isMember ? (
+                    <Link to={`././AddProduct/${memberId}`}>Add to Store</Link>
+                  ) : (
+                    <Link>My orders</Link>
+                  )}
+
                   <br />
                 </>
               )}
@@ -219,13 +224,17 @@ function ProfilePage() {
               {isMember ? (
                 <>
                   {" "}
-                  <Link to={`/notification/${memberId}/${isMember}`}>Tasks </Link>
+                  <Link to={`/notification/${memberId}/${isMember}`}>
+                    Tasks{" "}
+                  </Link>
                   <br />
                 </>
               ) : (
                 <>
                   {" "}
-                  <Link to={`/notification/${user._id}/${isMember}`}>Notifications</Link>
+                  <Link to={`/notification/${user._id}/${isMember}`}>
+                    Notifications
+                  </Link>
                   <br />
                 </>
               )}
@@ -239,7 +248,6 @@ function ProfilePage() {
                 <p>
                   <label>First Name</label> {user.firstName}
                 </p>
-                
 
                 <p>
                   <label>Last Name</label> {user.lastName}

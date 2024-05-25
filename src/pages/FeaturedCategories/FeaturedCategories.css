@@ -1,0 +1,52 @@
+.head-cat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+.head-cat h1 {
+  font-family: "cursive";
+}
+
+.hr {
+  margin-left: 5%;
+  margin-right: 5%;
+  border-bottom: 1px solid #FBF3D5;
+}
+.hr .animate-hr {
+  width: 200px;
+  height: 7px;
+  background-color: #D37676;
+  position: relative;
+}
+
+.visible-categories {
+  padding: 5%;
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
+}
+.visible-categories a {
+  text-decoration: none;
+  color: black;
+}
+.visible-categories a:hover {
+  color: #D37676;
+}
+.visible-categories a .category {
+  margin-right: 10px;
+}
+.visible-categories a .category .images {
+  background-color: #f7f8fc;
+  border-radius: 15px;
+  padding: 20%;
+}
+.visible-categories a .category .images img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+.visible-categories a .category h3 {
+  text-align: center;
+}/*# sourceMappingURL=FeaturedCategories.css.map */

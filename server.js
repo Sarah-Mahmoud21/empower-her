@@ -216,6 +216,37 @@ const TaskSchema = new mongoose.Schema({
 });
 
 const Task = mongoose.model("Task", TaskSchema);
+const ProductSchema = new mongoose.Schema({
+  memberId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "members",
+    required: true,
+  },
+  productName: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  category: {
+    type: String,
+    required:true,
+  },
+  quantity:{
+    type: String,
+    required:true,
+  },
+  images: [String],
+});
+
+const Product = mongoose.model("Product", ProductSchema);
+
 
 
 
@@ -784,5 +815,159 @@ app.delete("/Internship/:id", async (req, res) => {
   } catch (error) {
     console.error("Error deleting intern:", error);
     res.status(500).json({ success: false, message: "Failed to delete intern" });
+  }
+});
+// Products Endpoints
+
+// Create a new product
+app.post("/products", upload.array("images"), async (req, res) => {
+  try {
+    const productData = req.body;
+    const images = req.files.map((file) => file.path);
+    const newProduct = await Product.create({ ...productData, images });
+    res.status(201).json({
+      success: true,
+      message: "Product added successfully",
+      product: newProduct,
+    });
+  } catch (error) {
+    console.error("Error adding product:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to add product",
+    });
+  }
+});
+
+
+// // Update a product by ID
+// app.put("/products/:id", upload.array("pictures"), async (req, res) => {
+//   try {
+//     const productData = req.body;
+//     const pictures = req.files.map((file) => file.path);
+//     const updatedProduct = await Product.findByIdAndUpdate(
+//       req.params.id,
+//       { ...productData, pictures },
+//       { new: true }
+//     );
+//     if (!updatedProduct) {
+//       return res.status(404).json({ success: false, message: "Product not found" });
+//     }
+//     res.status(200).json({
+//       success: true,
+//       message: "Product updated successfully",
+//       product: updatedProduct,
+//     });
+//   } catch (error) {
+//     console.error("Error updating product:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Failed to update product",
+//     });
+//   }
+// });
+
+// // Delete a product by ID
+// app.delete("/products/:id", async (req, res) => {
+//   try {
+//     const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+//     if (!deletedProduct) {
+//       return res.status(404).json({ success: false, message: "Product not found" });
+//     }
+//     res.status(200).json({ success: true, message: "Product deleted successfully" });
+//   } catch (error) {
+//     console.error("Error deleting product:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Failed to delete product",
+//     });
+//   }
+// });
+
+app.get("/products", async (req, res) => {
+  try {
+    const products = await Product.find();
+
+    if (!products) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No products found" });
+    }
+    const productsWithPictures = products.map((product) => {
+      const { images, ...rest } = product.toObject();
+      const pictureUrls = images.map(
+        (picture) =>
+          `${req.protocol}://${req.get("host")}/uploads/${path.basename(
+            picture
+          )}`
+      );
+      return { ...rest, images: pictureUrls };
+    });
+
+    return res
+      .status(200)
+      .json({ success: true, products: productsWithPictures });
+  } catch (error) {
+    console.error("Error fetching products :", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+app.get("/products/:title", async (req, res) => {
+  try {
+    const title = req.params.title;
+    const filteredProducts = await Product.find({ category: title });
+
+    if (filteredProducts.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No products found" });
+    }
+
+    const productsWithPictures = filteredProducts.map((product) => {
+      const { images, ...rest } = product.toObject();
+      const pictureUrls = images.map(
+        (picture) =>
+          `${req.protocol}://${req.get("host")}/uploads/${path.basename(
+            picture
+          )}`
+      );
+      return { ...rest, images: pictureUrls };
+    });
+
+    return res
+      .status(200)
+      .json({ success: true, products: productsWithPictures });
+  } catch (error) {
+    console.error("Error fetching products :", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+app.get("/product/:id", async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No product found" });
+    }
+
+    const { images, ...rest } = product.toObject();
+    const pictureUrls = images.map(
+      (picture) =>
+        `${req.protocol}://${req.get("host")}/uploads/${path.basename(
+          picture
+        )}`
+    );
+
+    return res
+      .status(200)
+      .json({ success: true, product: { ...rest, images: pictureUrls } });
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 });

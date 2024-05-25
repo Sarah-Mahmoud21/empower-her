@@ -66,6 +66,7 @@ function ManagerMembership() {
     <>
       <ManagerHeader />
       <div>
+        <h1>Membership Applicants</h1>
       
         {members.length === 0 ? (
           <h2>All applications have been reviewed</h2>        ) : (

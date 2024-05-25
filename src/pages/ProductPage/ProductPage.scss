@@ -1,0 +1,68 @@
+@import "../variables";
+.product {
+  padding: 1%;
+  display: grid;
+  grid-template-columns: 40% 60%;
+  .images {
+    margin-right: 5%;
+    img {
+      width: 500px;
+      aspect-ratio: 1/1;
+      object-fit: contain;
+    }
+    .sub-images {
+      display: grid;
+      grid-template-columns: 33% 33% 33%;
+      img {
+        width: 140px;
+        aspect-ratio: 1/1;
+        object-fit: contain;
+      }
+    }
+  }
+  .product-info {
+    padding: 8%;
+    .head-info {
+      display: flex;
+      justify-content: space-between;
+      font-family: "Muli";
+    }
+    .sub-header {
+        display: flex;
+        justify-content: space-between;
+      .quantity {
+        width: 200px;
+        height:25px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid #f2f2f2;
+
+        button {
+          background: none;
+          border: 1px solid $peach;
+          width: 30px;
+          height: 25px;
+          font-size: 15px;
+        }
+      }
+      .add-cart{
+        display: flex;
+        
+        button {
+          margin: 10px;
+          height: 30px;
+          font-size: 15px;
+          font-family: "Muli";
+          border: 1px solid $peach;
+          border-radius: 10px;
+          background: none;
+        }
+        .add {
+          width: 150px;
+          background-color: $peach;
+        }
+      }
+    }
+  }
+}

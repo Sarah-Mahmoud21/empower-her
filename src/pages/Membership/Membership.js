@@ -13,7 +13,7 @@ function Membership() {
     fullName: "",
     address: "",
     mobileNumber: "",
-    emailAddress: "",
+    email: "",
     education: "",
     age: "",
     socialMediaLink: "",
@@ -29,7 +29,7 @@ function Membership() {
         fullName: "",
         address: "",
         mobileNumber: "",
-        emailAddress: "",
+        email: "",
         education: "",
         age: "",
         socialMediaLink: "",
@@ -52,7 +52,7 @@ function Membership() {
         fullName: user.firstName + user.lastName,
         address: "",
         mobileNumber: "",
-        emailAddress: user.email,
+        email: user.email,
         education: "",
         age: "",
         socialMediaLink: "",
@@ -139,7 +139,7 @@ function Membership() {
         fullName: "",
         address: "",
         mobileNumber: "",
-        emailAddress: "",
+        email: "",
         education: "",
         age: "",
         socialMediaLink: "",
@@ -211,13 +211,13 @@ function Membership() {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="emailAddress">Email Address</label>
+              <label htmlFor="email">Email Address</label>
               <br />
               <input
                 type="email"
-                id="emailAddress"
-                name="emailAddress"
-                value={formData.emailAddress}
+                id="email"
+                name="email"
+                value={formData.email}
                 onChange={handleChange}
               />
             </div>

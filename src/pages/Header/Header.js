@@ -58,6 +58,9 @@ function Header() {
             <li>
               <Link to="/Opportunities">Opportunities </Link>
             </li>
+            <li>
+              <Link to="/Store">Store </Link>
+            </li>
           </ul>
 
           <ul className="icons">
@@ -85,9 +88,9 @@ function Header() {
               </button>
             </li>
             <li>
-              <button className="shopping">
+              <Link to="/Cart">
                 <FontAwesomeIcon icon={faShoppingBasket} />
-              </button>
+              </Link>
             </li>
           </ul>
         </nav>
@@ -124,6 +127,9 @@ function Bar() {
         <li>
           <Link to="/opportunities">Opportunities </Link>
         </li>
+        <li>
+              <Link to="/Store">Store </Link>
+            </li>
       </ul>
     </>
   );

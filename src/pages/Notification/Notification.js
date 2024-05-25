@@ -9,8 +9,7 @@ import Header from '../Header/Header';
 
 function Notification() {
   const { memberId, isMember } = useParams(); // Access isMember directly here
-  const isMemberBool = isMember === "true";
-  
+  const isMemberBool = isMember === "true"; 
   const [tasks, setTasks] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [newProgress, setNewProgress] = useState('');

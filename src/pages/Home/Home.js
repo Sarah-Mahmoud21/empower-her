@@ -1,5 +1,5 @@
 import  "../Home/Home.css";
-import PhotoSlider from "../../helper/Photoslider/PhotoSlider";
+import PhotoSlider from "../PhotoSliderHome/PhotoSlider";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Header from "../Header/Header";

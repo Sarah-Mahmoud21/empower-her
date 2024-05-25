@@ -1,4 +1,5 @@
-@import '/empower-her/src/pages/breakpoint';
+@import '../variables';
+@import '../breakpoint';
 @mixin button-style{
     color:#d37676;
     font-size: 40px;

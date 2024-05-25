@@ -1,7 +1,7 @@
 // PhotoSlider.js
 
 import React, { useState } from 'react';
-import '../Photoslider/PhotoSlider.css';
+import '../PhotoSliderHome/PhotoSlider.css';
 
 const PhotoSlider = ({ images }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
