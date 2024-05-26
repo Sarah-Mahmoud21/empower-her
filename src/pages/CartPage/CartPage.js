@@ -1,45 +1,59 @@
-import React, { useEffect, useState ,useContext} from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Header from "../Header/Header";
 import "../CartPage/CartPage.css";
 import { CartContext } from "../../helper/CartContext";
 import CloseIcon from "@mui/icons-material/Close";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShekel } from "@fortawesome/free-solid-svg-icons";
 
 function CartPage() {
-  const {  cart,addToCart ,removeFromCart} = useContext(CartContext);
-  const [number,setNumber] = useState(1);
+  const { cart, addToCart, removeFromCart } = useContext(CartContext);
+  const [quantities, setQuantities] = useState({});
+  const queryParams = new URLSearchParams();
+
+
+  useEffect(() => {
+    const initialQuantities = {};
+    cart.forEach((item) => {
+      initialQuantities[item._id] = 1; // Assuming the initial quantity is 1
+    });
+    setQuantities(initialQuantities);
+  }, [cart]);
+
+  cart.forEach((item, index) => {
+    queryParams.append(`quantity${index + 1}`, quantities[item._id]);
+  });
 
   const incrementQuan = (item) => {
-    if(number < item.quantity){
-        setNumber(number + 1);
-    } 
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [item._id]:
+        prevQuantities[item._id] < item.quantity
+          ? prevQuantities[item._id] + 1
+          : prevQuantities[item._id],
+    }));
   };
 
   const decrementQuan = (item) => {
-    if(number > 1){
-        setNumber(number - 1);
-    } 
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [item._id]:
+        prevQuantities[item._id] > 1
+          ? prevQuantities[item._id] - 1
+          : prevQuantities[item._id],
+    }));
   };
 
- 
-  
-  let len = 0;
-  cart.forEach((item) => {
-    const quan = number;
-    len += quan;
-  });
+  const totalItems = Object.values(quantities).reduce(
+    (total, num) => total + num,
+    0
+  );
 
-  const Price = (cart) => {
-    let total = 0;
-    cart.forEach((item) => {
-      const originalPrice = item.price * number;
-      total += originalPrice;
-    });
-    return total;
-  };
-  const handleAddToCart = (item) => {
-    addToCart(item); // Add current product to the cart
-  };
-  
+  const totalPrice = cart.reduce((total, item) => {
+    return total + item.price * (quantities[item._id] || 1);
+  }, 0);
+
   return (
     <>
       <Header />
@@ -51,31 +65,34 @@ function CartPage() {
               <div key={item._id} className="cart-items">
                 <button
                   className="close"
-                  onClick={() => removeFromCart(item.id)}>
+                  onClick={() => removeFromCart(item._id)}>
                   <CloseIcon />
                 </button>
                 <img src={item.images[0]} alt={item.productName} />
                 <p>{item.productName}</p>
                 <div className="quantity">
                   <button onClick={() => decrementQuan(item)}>-</button>
-                  <span>{number}</span>
+                  <span>{quantities[item._id]}</span>
                   <button onClick={() => incrementQuan(item)}>+</button>
                 </div>
               </div>
             ))}
             <div className="cart-info">
-              <p>Subtotal ({len}) items </p>
+              <p>Subtotal ({totalItems}) items </p>
               <p
                 style={{
-                  color: "#707070",
-                  textDecoration: "line-through",
-                  fontSize: "15px",
+                  fontSize: "25px",
                 }}>
-                ${Price(cart)}
+                <FontAwesomeIcon
+                  icon={faShekel}
+                  style={{ fontSize: "20px" }}></FontAwesomeIcon>{" "}
+                {totalPrice.toFixed(2)}
               </p>
-             
+
               <hr />
-              <button>Proceed to Checkout</button>
+             <Link to={`/checkout?${queryParams.toString()}`}>
+        <button>Proceed to Checkout</button>
+      </Link>
             </div>
           </>
         ) : (
@@ -84,7 +101,6 @@ function CartPage() {
               <h1>Your cart is empty</h1>
               <img src="https://solartrade.in/img/404.svg" alt="empty cart" />
             </div>
-            
           </>
         )}
       </div>

@@ -19,6 +19,7 @@ import ProductPage from './pages/ProductPage/ProductPage';
 import { CartProvider } from './helper/CartContext';
 import FeaturedProducts from './pages/FeaturedProducts/FeautredProducts';
 import CartPage from './pages/CartPage/CartPage';
+import Checkout from './pages/CheckOut/CheckOut';
 
 
 
@@ -87,6 +88,10 @@ const router = createBrowserRouter([
   {
     path:'/Cart',
     element:<CartPage/>
+  },
+  {
+    path:'/checkout',
+    element:<Checkout/>
   }
 ]);
 
@@ -97,6 +102,7 @@ ReactDOM.render(
         <ProductPage />
         <FeaturedProducts/> 
         <CartPage/>
+        <Checkout/>
       </RouterProvider>
     </CartProvider>
   </React.StrictMode>,
