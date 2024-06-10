@@ -16,13 +16,14 @@
 .photo-slider1 .sub-slider .info h1 {
   font-family: "cursive";
 }
-.photo-slider1 .sub-slider .info button {
+.photo-slider1 .sub-slider .info h3 {
   color: black;
+  text-align: center;
   background-color: #D37676;
   border: none;
   border-radius: 20px;
-  font-size: 20px;
-  width: 200px;
+  font-size: 25px;
+  padding: 5px;
 }
 .photo-slider1 img {
   width: 28%;

@@ -4,13 +4,14 @@ import { CartContext } from "../../helper/CartContext";
 import "../CheckOut/Checkout.css";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
+import axios from "axios";
 
 function Checkout() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const { cart } = useContext(CartContext);
+  const { cart, removeFromCart } = useContext(CartContext);
   const [subtotal, setSubtotal] = useState(0);
-  const [activeStep, setActiveStep] = useState(1); // State to manage active step
+  const [activeStep, setActiveStep] = useState(1);
 
   const quantities = [];
   for (const param of queryParams.entries()) {
@@ -27,20 +28,13 @@ function Checkout() {
     setSubtotal(total);
   }, [cart, quantities]);
 
-  // State variables for shipping address and payment details
   const [shippingAddress, setShippingAddress] = useState({
     country: "",
     city: "",
     address: "",
+    phone :""
   });
-  const [paymentDetails, setPaymentDetails] = useState({
-    cardNumber: "",
-    expirationDate: "",
-    cvv: "",
-    phone: "",
-  });
-
-  // Event handler for shipping address input changes
+  
   const handleAddressChange = (e) => {
     const { name, value } = e.target;
     setShippingAddress((prevAddress) => ({
@@ -49,20 +43,79 @@ function Checkout() {
     }));
   };
 
-  // Event handler for payment details input changes
-  const handlePaymentChange = (e) => {
-    const { name, value } = e.target;
-    setPaymentDetails((prevDetails) => ({
-      ...prevDetails,
-      [name]: value,
-    }));
+  
+
+  const isShippingAddressValid = () => {
+    return (
+      shippingAddress.country &&
+      shippingAddress.city &&
+      shippingAddress.address &&
+      shippingAddress.phone
+
+    );
   };
 
-  // Event handler to change the active step
+  
+
   const handleStepChange = (step) => {
+    if (step === 2 && (!isShippingAddressValid())) {
+      alert("Please fill in all required fields before proceeding.");
+      return;
+    }
     setActiveStep(step);
   };
 
+  const handleOrderSubmission = async () => {
+  try {
+    await Promise.all(
+      cart.map(async (item, index) => {
+        if(isShippingAddressValid()){
+          const initialQuantity = Number(item.quantity);
+          const purchaseQuantity = Number(quantities[index]);
+          let newQuantity = initialQuantity - purchaseQuantity;
+          console.log(`Updating product ${item.id}: initial ${initialQuantity}, purchased ${purchaseQuantity}, new ${newQuantity}`);
+          await axios.put(`http://localhost:4000/products/${item._id}`, {
+            quantity: newQuantity,
+          });
+          
+          const saleDetails = {
+            productId: item._id,
+            quantity: quantities[index]
+          };
+          await axios.post("http://localhost:4000/sales", saleDetails);
+        
+
+          // Post to customers table
+          const orderDetails = {
+            cartItems: cart.map((item, index) => ({
+              _id: item._id,
+              quantity: quantities[index]
+            })),
+            country: shippingAddress.country,
+            city: shippingAddress.city,
+            street: shippingAddress.address,
+            mobileNumber: shippingAddress.phone,
+            totalAmount: subtotal
+          };
+          await axios.post("http://localhost:4000/customers", orderDetails);
+
+          // Post to sales table
+          
+            
+
+          removeFromCart(item._id);
+        }
+      })
+    );
+    handleStepChange(2);
+  } catch (error) {
+    console.error("Failed to update the item quantity", error);
+    alert("There was an error processing your order. Please try again.");
+  }
+};
+
+  
+  
   return (
     <>
       <Header />
@@ -78,7 +131,6 @@ function Checkout() {
         <span className="hr"></span>
         <span
           className={`num ${activeStep === 2 ? "active" : ""}`}
-          onClick={() => handleStepChange(2)}
         >
           2
         </span>
@@ -94,6 +146,7 @@ function Checkout() {
                     <br />
                     <input
                       type="text"
+                      placeholder="Only Palestine Available Now"
                       name="country"
                       value={shippingAddress.country}
                       onChange={handleAddressChange}
@@ -121,54 +174,20 @@ function Checkout() {
                     ></textarea>
                     <br />
                   </div>
+                  <div className="form-group">
+                    <label>Phone:</label>
+                    <br />
+                    <input
+                      type="text"
+                      name="phone"
+                      value={shippingAddress.phone}
+                      onChange={handleAddressChange}
+                    />
+                    <br/>
+                  </div>
                 </form>
-
                 <div>
-                  <h2> Payment Details </h2>
-                  <form>
-                    <div className="form-group">
-                      <label>Card Number:</label>
-                      <br />
-                      <input
-                        type="text"
-                        name="cardNumber"
-                        value={paymentDetails.cardNumber}
-                        onChange={handlePaymentChange}
-                      />
-                      <br />
-                    </div>
-                    <div className="form-group">
-                      <label>Expiration Date:</label>
-                      <br />
-                      <input
-                        type="text"
-                        name="expirationDate"
-                        value={paymentDetails.expirationDate}
-                        onChange={handlePaymentChange}
-                      />
-                      <br />
-                    </div>
-                    <div className="form-group">
-                      <label>CVV:</label>
-                      <br />
-                      <input
-                        type="text"
-                        name="cvv"
-                        value={paymentDetails.cvv}
-                        onChange={handlePaymentChange}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Don't have a visa? Enter your phone number here:</label>
-                      <br />
-                      <input
-                        type="text"
-                        name="phone"
-                        value={paymentDetails.phone}
-                        onChange={handlePaymentChange}
-                      />
-                    </div>
-                  </form>
+                  
                 </div>
               </div>
               <div>
@@ -179,15 +198,23 @@ function Checkout() {
                     <p>
                       {item.price} x {quantities[index]}
                     </p>
-                    <p>Subtotal: ${(item.price * quantities[index]).toFixed(2)}</p>
+                    <p>
+                      Subtotal: ${(item.price * quantities[index]).toFixed(2)}
+                    </p>
                   </div>
                 ))}
-                 <div className="total">
-              <h2>Total: ${subtotal.toFixed(2)}</h2>
-              <Link to ="/cart">
-              <button className="review"> Review Order</button>
-              </Link>
-            </div>
+                <div className="total">
+                  <h2>Total: ${subtotal.toFixed(2)}</h2>
+                  <Link to="/cart">
+                    <button className="review"> Review Order</button>
+                  </Link>
+                  <button
+                    onClick={handleOrderSubmission}
+                    className="review"
+                  >
+                    Submit Order
+                  </button>
+                </div>
               </div>
             </div>
           ) : (

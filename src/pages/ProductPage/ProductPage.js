@@ -12,7 +12,7 @@ import { CartContext } from "../../helper/CartContext";
 function ProductPage() {
     const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [quantity, setQuantity] = useState(1);
+  // const [quantity, setQuantity] = useState(1);
   const [selectedSubImageIndex, setSelectedSubImageIndex] = useState(-1);
   const {  cart,addToCart } = useContext(CartContext);
 
@@ -36,17 +36,17 @@ function ProductPage() {
     thumbnail: picture,
   }));
 
-  const incrementQuan = () => {
-    if (quantity < product.quantity) {
-      setQuantity(quantity + 1);
-    }
-  };
+  // const incrementQuan = () => {
+  //   if (quantity < product.quantity) {
+  //     setQuantity(quantity + 1);
+  //   }
+  // };
 
-  const decrementQuan = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
-  };
+  // const decrementQuan = () => {
+  //   if (quantity > 1) {
+  //     setQuantity(quantity - 1);
+  //   }
+  // };
 
   
 
@@ -93,9 +93,9 @@ function ProductPage() {
 
           <div className="sub-header">
             <div className="quantity">
-              <button onClick={decrementQuan}>-</button>
-              <span>{quantity}</span>
-              <button onClick={incrementQuan}>+</button>
+              {/* <button onClick={decrementQuan}>-</button> */}
+              <span> Available Quantity in Stock : {product.quantity}</span>
+              {/* <button onClick={incrementQuan}>+</button> */}
             </div>
 
              <div className="add-cart">

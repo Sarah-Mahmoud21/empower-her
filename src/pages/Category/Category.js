@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useContext} from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Header from "../Header/Header";
@@ -6,10 +6,14 @@ import Footer from "../Footer/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShekel } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { CartContext } from "../../helper/CartContext";
+
 
 function Category() {
     const { title } = useParams();
     const [products, setProducts] = useState([]);
+    const {  cart,addToCart } = useContext(CartContext);
+
 
     useEffect(() => {
         axios
@@ -23,7 +27,9 @@ function Category() {
     }, [title]);
 
     
-    
+    const handleAddToCart = (product) => {
+      addToCart(product); 
+   }
     return (
         <>
             <Header />
@@ -40,7 +46,7 @@ function Category() {
               <p className="original-price"> <FontAwesomeIcon icon={faShekel} style={{fontSize:'10px'}}></FontAwesomeIcon> {product.price}</p>
               
               </Link>
-              <button>Add to Cart</button>
+              <button onClick={()=>handleAddToCart(product)}>Add to Cart</button>
               </div>
           ))
         )}

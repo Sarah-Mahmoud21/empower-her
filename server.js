@@ -239,13 +239,66 @@ const ProductSchema = new mongoose.Schema({
     required:true,
   },
   quantity:{
-    type: String,
+    type: Number,
     required:true,
   },
   images: [String],
 });
 
 const Product = mongoose.model("Product", ProductSchema);
+
+const CustomersSchema = new mongoose.Schema({
+  productId: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product', 
+    required: true 
+  },
+  quantity: { 
+    type: Number,
+    required: true 
+  },
+  country: {
+    type: String,
+    required: true,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+  street: {
+    type: String,
+    required: true,
+  },
+  mobileNumber: {
+    type: String,
+    required: true
+  },
+  totalAmount: {
+    type: Number,
+    required: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now, 
+  },
+});
+
+const Customers = mongoose.model("Customers", CustomersSchema);
+
+const SalesSchema = new mongoose.Schema({
+  productId: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product', 
+    required: true 
+  },
+  quantity: { 
+    type: Number,
+    required: true 
+  }
+});
+const Sales = mongoose.model("Sales", SalesSchema);
+
+
 
 
 
@@ -457,7 +510,7 @@ app.post("/login", async (req, res) => {
       .json({ success: false, message: "Incorrect password" });
   }
   const token = jwt.sign({ userId: user._id }, "7bI$64T*5!sKv&9Lp@8Fq#3m^2Hd", {
-    expiresIn: "1h",
+    expiresIn: "24h",
   });
 
   // Send token to the client
@@ -841,31 +894,35 @@ app.post("/products", upload.array("images"), async (req, res) => {
 
 
 // // Update a product by ID
-// app.put("/products/:id", upload.array("pictures"), async (req, res) => {
-//   try {
-//     const productData = req.body;
-//     const pictures = req.files.map((file) => file.path);
-//     const updatedProduct = await Product.findByIdAndUpdate(
-//       req.params.id,
-//       { ...productData, pictures },
-//       { new: true }
-//     );
-//     if (!updatedProduct) {
-//       return res.status(404).json({ success: false, message: "Product not found" });
-//     }
-//     res.status(200).json({
-//       success: true,
-//       message: "Product updated successfully",
-//       product: updatedProduct,
-//     });
-//   } catch (error) {
-//     console.error("Error updating product:", error);
-//     res.status(500).json({
-//       success: false,
-//       message: "Failed to update product",
-//     });
-//   }
-// });
+app.put("/products/:id", upload.array("images"), async (req, res) => {
+  try {
+    const productData = req.body;
+    let update = { ...productData };
+
+    if (req.files && req.files.length > 0) {
+      const pictures = req.files.map((file) => file.path);
+      update.images = pictures;
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, update, { new: true });
+
+    if (!updatedProduct) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Product updated successfully",
+      product: updatedProduct,
+    });
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update product",
+    });
+  }
+});
 
 // // Delete a product by ID
 // app.delete("/products/:id", async (req, res) => {
@@ -969,5 +1026,62 @@ app.get("/product/:id", async (req, res) => {
   } catch (error) {
     console.error("Error fetching product:", error);
     return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+app.post('/Customers', async (req, res) => {
+  console.log('Received data:', req.body);  // Add this line for debugging
+
+  const { cartItems, country, city, street, mobileNumber, totalAmount } = req.body;
+
+  try {
+    if (!country || !city || !street || !mobileNumber || !cartItems || !Array.isArray(cartItems)) {
+      return res.status(400).json({ success: false, message: 'Missing required fields' });
+    }
+
+    for (const item of cartItems) {
+      const customerEntry = new Customers({
+        productId: item._id,
+        quantity: item.quantity,
+        country: country,
+        city: city,
+        street: street,
+        mobileNumber: mobileNumber,
+        totalAmount: totalAmount,
+        date: new Date()
+      });
+      await customerEntry.save();
+    }
+    res.json({ success: true, message: 'Customer details saved successfully' });
+  } catch (error) {
+    console.error('Error saving customer data:', error);
+    res.status(500).json({ success: false, message: 'Failed to process customer details' });
+  }
+});
+
+app.post('/sales', async (req, res) => {
+  console.log("hi sales");  // Add this line for debugging
+
+  const { productId, quantity } = req.body;
+
+  try {
+    let sale = await Sales.findOne({ productId });
+
+    if (sale) {
+      // Update existing sale
+      sale.quantity += quantity;
+      await sale.save();
+    } else {
+      // Create new sale entry
+      sale = new Sales({
+        productId: productId,
+        quantity: quantity
+      });
+      await sale.save();
+    }
+
+    res.json({ success: true, message: 'Sales data saved successfully' });
+  } catch (error) {
+    console.error('Error saving sales data:', error);
+    res.status(500).json({ success: false, message: 'Failed to process sales data' });
   }
 });

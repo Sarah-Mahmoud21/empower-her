@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 
   import '../PhotoSlider/PhotoSlider.css'
+import { Link } from "react-router-dom";
   const PhotoSlider = ({ images }) => {
     const [currentSlide, setCurrentSlide] = useState(0);
   
@@ -19,7 +20,7 @@ import React, {useState} from "react";
          
           <h1>{images[currentSlide].title}</h1>
           <p>{images[currentSlide].description}</p>
-          <button>shop now</button>
+          <h3> shop now</h3>
      </div>
           <img src={images[currentSlide].url} alt={`Slide ${currentSlide + 1}`} />
         

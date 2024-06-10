@@ -1,4 +1,4 @@
-@import "../pages/variables";
+@import "../variables";
 .photo-slider1{
     background-color: $pink;
     margin:0%;
@@ -17,15 +17,14 @@
         h1{
             font-family:  $cursive;
         }
-        button{
+        h3{
             color:black;
+            text-align: center;
             background-color: $peach;
             border: none;
             border-radius: 20px;
-            font-size: 20px;
-
-
-            width:200px;
+            font-size: 25px;
+            padding: 5px;
         }
     }
     }

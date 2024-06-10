@@ -48,11 +48,12 @@ export const CartProvider = ({ children }) => {
   
 
   const removeFromCart = (productId) => {
-    const updatedCart = cart.filter((item) => item._id !== productId);
-    const updatedQuantities = { ...quantities };
-    delete updatedQuantities[productId];
-    setCart(updatedCart);
-    setQuantities(updatedQuantities);
+    // const updatedCart = cart.filter((item) => item._id !== productId);
+    // const updatedQuantities = { ...quantities };
+    // delete updatedQuantities[productId];
+    // setCart(updatedCart);
+    // setQuantities(updatedQuantities);
+      setCart((prevCart) => prevCart.filter(item => item._id !== productId));
   };
 
   const updateQuantity = (productId, quantity) => {
