@@ -1057,6 +1057,19 @@ app.post('/Customers', async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to process customer details' });
   }
 });
+app.get("/Customers", async (req, res) => {
+  try {
+    const customers = await Customers.find();
+    if (!customers) {
+      return res.status(404).json({ success: false, message: "No customers found" });
+    }
+    return res.status(200).json({ success: true, customers });
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
 
 app.post('/sales', async (req, res) => {
   console.log("hi sales");  // Add this line for debugging
@@ -1083,5 +1096,17 @@ app.post('/sales', async (req, res) => {
   } catch (error) {
     console.error('Error saving sales data:', error);
     res.status(500).json({ success: false, message: 'Failed to process sales data' });
+  }
+});
+app.get("/Sales", async (req, res) => {
+  try {
+    const sales = await Sales.find();
+    if (!sales) {
+      return res.status(404).json({ success: false, message: "No sales found" });
+    }
+    return res.status(200).json({ success: true, sales });
+  } catch (error) {
+    console.error("Error fetching sales:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 });

@@ -56,6 +56,7 @@ function ManagerHeader() {
         <li>
           <Link to="/internship">View internships </Link>
         </li>
+        
           </ul>
 
           <ul className="icons">
